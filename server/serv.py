@@ -86,8 +86,43 @@ while 1:
         print(fileData)
         dataSocket.close()
     elif cmd[0] == "get":
-        # NEED TO CREATE THIS
-        print("IN DEVELOPMENT")
+        print("SUCCESS:", cmd[0], cmd[1])
+        serverSocket2.listen(1)
+
+        # First test to see if file exists and open it
+        fileExists = False
+        fileObj = ""
+        try:
+            fileObj = open(cmd[1], "r")
+            fileExists = True
+        except OSError as e:
+            print(e)
+
+        if fileExists:
+            # Send the command statement to server
+            controlSocket.send((cmd[0] + " " + cmd[1]).encode())
+            
+            # Accept connections
+            dataSocket, addr = serverSocket2.accept()
+
+            # Send the data w/ append to transfer bytes size and print
+            bytesSent = 0
+            fileData = None
+            while 1:
+                fileData = fileObj.read(65536)
+                if fileData:
+                    dataSizeStr = str(len(fileData))
+                    while len(dataSizeStr) < 10:
+                        dataSizeStr = "0" + dataSizeStr
+                    fileData = dataSizeStr + fileData
+                    fileData = fileData.encode()
+                    while len(fileData) > bytesSent:
+                        bytesSent += dataSocket.send(fileData[bytesSent:])
+                else:
+                    break
+            print("File:", cmd[1] + "\t\t", "Bytes:", bytesSent - 10)
+            dataSocket.close()
+
     elif cmd[0] == "ls":
         # NEED TO CREATE THIS
         print("IN DEVELOPMENT")

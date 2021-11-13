@@ -23,6 +23,30 @@ controlSocket.connect((serverName, serverPort))
 # Show a list of client commands
 print("Command list: put <filename>; get <filename>; ls; quit")
 
+def recvAll(sock, numBytes):
+    # The buffer
+    recvBuff = ""
+
+    # The temporary buffer
+    tmpBuff = ""
+
+    # Keep receiving till all is received
+    while len(recvBuff) < numBytes:
+
+        # Attempt to receive bytes
+        tmpBuff = sock.recv(numBytes)
+
+        # The other side has closed the socket
+        if not tmpBuff:
+            break
+
+        # Add the received bytes to the buffer
+        tmpBuff = tmpBuff.decode()
+        recvBuff += tmpBuff
+
+    return recvBuff
+
+
 while 1:
     # Receive input command from client
     cmd = input("ftp> ")
@@ -66,8 +90,21 @@ while 1:
             print("File:", cmd[1] + "\t\t", "Bytes:", bytesSent - 10)
             dataSocket.close()
     elif cmd[0] == "get":
-        # NEED TO CREATE THIS
-        print("IN DEVELOPMENT")
+        controlSocket.send((cmd[0] + " " + cmd[1]).encode())
+
+        dataSocket = socket(AF_INET, SOCK_STREAM)
+        dataSocket.connect((serverName, dataPort))
+
+        fileData = ""
+        recvBuff = ""
+        fileSize = 0
+        fileSizeBuff = ""
+        fileSizeBuff = recvAll(dataSocket, 10)
+        fileSize = int(fileSizeBuff)
+        fileData = recvAll(dataSocket, fileSize)
+        print("The file data is:")
+        print(fileData)
+        dataSocket.close()
     elif cmd[0] == "ls":
         # NEED TO CREATE THIS
         print("IN DEVELOPMENT")
