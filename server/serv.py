@@ -1,6 +1,6 @@
 # Server side code
 from socket import *
-import sys
+import os, sys
 
 # Establish default server port
 serverPort = 1234
@@ -124,8 +124,27 @@ while 1:
             dataSocket.close()
 
     elif cmd[0] == "ls":
-        # NEED TO CREATE THIS
-        print("IN DEVELOPMENT")
+        # returns all the files names inside the server directory
+        print("SUCCESS:", cmd[0])
+        serverSocket2.listen(1)
+        dataSocket, addr = serverSocket2.accept()
+        fileList = ""
+        bytesSent = 0
+
+        for file in os.listdir():
+            if ".py" in file:
+                continue
+            else:
+                fileList = fileList + file + "\n"
+        dataSizeStr = str(len(fileList))
+        while len(dataSizeStr) < 10:
+            dataSizeStr = "0" + dataSizeStr
+        fileData = dataSizeStr + fileList
+        fileData = fileData.encode()
+        while len(fileData) > bytesSent:
+            bytesSent += dataSocket.send(fileData[bytesSent:])
+        print("Files:", fileList, "Bytes:", bytesSent - 10)
+        dataSocket.close()
     elif cmd[0] == "quit":
         print("SUCCESS:", cmd[0])
         print("Server now closing..")

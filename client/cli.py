@@ -106,8 +106,22 @@ while 1:
         print(fileData)
         dataSocket.close()
     elif cmd[0] == "ls":
-        # NEED TO CREATE THIS
-        print("IN DEVELOPMENT")
+        # Send conmmand to server to list all files on server
+        controlSocket.send(cmd[0].encode())
+
+        dataSocket = socket(AF_INET, SOCK_STREAM)
+        dataSocket.connect((serverName, dataPort))
+
+        fileData = ""
+        recvBuff = ""
+        fileSize = 0
+        fileSizeBuff = ""
+        fileSizeBuff = recvAll(dataSocket, 10)
+        fileSize = int(fileSizeBuff)
+        fileData = recvAll(dataSocket, fileSize)
+        print("Files in the server directory:")
+        print(fileData)
+        dataSocket.close()
     elif cmd[0] == "quit":
         # Send the command statement to server then end script
         controlSocket.send(cmd[0].encode())
