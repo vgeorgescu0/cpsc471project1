@@ -9,6 +9,6 @@
 - Louis Zuckerman @louiszman@csu.fullerton.edu
 
 **Language**
-Python
+- Python
 
 How to execute:
