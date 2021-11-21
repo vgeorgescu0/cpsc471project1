@@ -19,10 +19,13 @@
 - VS Code
 
 **How to execute:**
-- Unzip file
-- Open the folder on Visual Studios Code
-- Open terminal
-- Run serv.py by typing "py serv.py" in terminal(Be sure you're in the server directory)
-- Next, run cli.py by typing "py cli.py" in terminal(Be sure you're in the client directory)
-- Use commands such as get, put, ls, and quit
+- Unzip into folder of choice
+- Open the root folder on IDE of choice (Pycharm, VS Code, etc)
+- Open terminal and "cd server"
+- Run serv.py by typing "py serv.py" in terminal
+- Open a second terminal (split to right) and "cd client"
+- Next, run cli.py by typing "py cli.py" in terminal
+- Use commands such as get 'filename', put 'filename', ls, and quit
 
+**OPTIONAL**
+- Can add custom arguments to server to include a port number by typing 'py serv.py SERVERPORT' or server name and port on client by typing 'py cli.py SERVERNAME SERVERPORT'. If no arguments provided, will default to 'localhost' and port 1234
